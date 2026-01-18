@@ -86,8 +86,8 @@ class RoleView(discord.ui.View):
                     discord.SelectOption(label="@LFG", value="LFG"),
                     discord.SelectOption(label="@LFG Beginner", value="LFG Beginner")
                 ],
-                custom_id="role_select"
-            )
+                custom_id="role_select")
+            
         elif(role_type == "Faction"):
             options = [discord.SelectOption(label=name, value=key) for key, name in self.role_map.items() if key not in ["LFG", "LFG Beginner"]]
             @discord.ui.select(
