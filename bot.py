@@ -176,7 +176,7 @@ class BotCommands(app_commands.Group):
         )
         await interaction.response.send_message(embed=embed, view=RoleView("LFG match"))
         
-    @app_commands.command(name="roles", description="Send the factions selection menu")
+    @app_commands.command(name="factions", description="Send the factions selection menu")
     async def factions(self, interaction: discord.Interaction):
         embed = discord.Embed(
             title="Faction Selection",
