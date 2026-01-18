@@ -97,6 +97,7 @@ class RoleView(discord.ui.View):
                 options=options,
                 custom_id="faction_select"
             )
+    
     async def select_callback(self, interaction: discord.Interaction, select: discord.ui.Select):
         guild = interaction.guild
         member = interaction.user
