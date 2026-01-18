@@ -1,5 +1,6 @@
 avvia una sessione se non esistente: tmux new -s discordbot
 lancia il bot nella sessione tmux: source venv/bin/activate
+                                   export DISCORD_TOKEN="PASTE_YOUR_BOT_TOKEN_HERE"
                                    python bot.py
 entrare in una sessione esistente: tmux attach -t discordbot
 uscire da una sessione: CTRL+B poi D
