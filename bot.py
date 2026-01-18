@@ -166,7 +166,7 @@ class RoleView(discord.ui.View):
         )
         self.selections = set()
 
-    @discord.ui.button(label="Remove roles", style=discord.ButtonStyle.destructive, custom_id="remove_roles")
+    @discord.ui.button(label="Remove roles", style=discord.ButtonStyle.danger, custom_id="remove_roles")
     async def submit_remove_roles(self, interaction: discord.Interaction, button: discord.ui.Button):
         member = interaction.user
     
