@@ -174,7 +174,7 @@ class BotCommands(app_commands.Group):
             title="Role Selection",
             description="Choose your roles below."
         )
-        await interaction.response.send_message(embed=embed, view=RoleView("LFG match"))
+        await interaction.response.send_message(embed=embed, view=RoleView(interaction.guild, "LFG match"))
         
     @app_commands.command(name="factions", description="Send the factions selection menu")
     async def factions(self, interaction: discord.Interaction):
@@ -182,7 +182,7 @@ class BotCommands(app_commands.Group):
             title="Faction Selection",
             description="Choose your factions below."
         )
-        await interaction.response.send_message(embed=embed, view=RoleView("Faction"))
+        await interaction.response.send_message(embed=embed, view=RoleView(interaction.guild, "Faction"))
 
 
 class Bot(discord.Client):
@@ -205,8 +205,11 @@ class Bot(discord.Client):
         
     async def on_guild_join(self, guild: discord.Guild):
         print(f"Joined new guild: {guild.name} ({guild.id})")
+        print("ensure roles exist...")
         await ensure_roles_exist(guild)
+        print("ensure faction channels exist...")
         await ensure_faction_channels_exist(guild)
+        print("Done!")
 
 bot = Bot()
 bot.run(os.getenv("DISCORD_TOKEN"))
