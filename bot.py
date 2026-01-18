@@ -200,8 +200,8 @@ class Bot(discord.Client):
         for guild in bot.guilds:
             await ensure_roles_exist(guild)
             await ensure_faction_channels_exist(guild)
-            self.add_view(RoleView(guild, "LFG match"))
-            self.add_view(RoleView(guild, "Faction"))
+            self.add_view(RoleView(guild, "LFG match"), timeout=None)
+            self.add_view(RoleView(guild, "Faction"), timeout=None)
         
     async def on_guild_join(self, guild: discord.Guild):
         print(f"Joined new guild: {guild.name} ({guild.id})")
