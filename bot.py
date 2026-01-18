@@ -196,10 +196,16 @@ class Bot(discord.Client):
         await self.tree.sync()
 
     async def on_ready(self):
+        print(f"Bot online: {self.user}")
+        for guild in bot.guilds:
+            await ensure_roles_exist(guild)
+            await ensure_faction_channels_exist(guild)
+        self.add_view(RoleView())
+        
+    async def on_guild_join(self, guild: discord.Guild):
+        print(f"Joined new guild: {guild.name} ({guild.id})")
         await ensure_roles_exist(guild)
         await ensure_faction_channels_exist(guild)
-        self.add_view(RoleView())
-        print(f"Bot online: {self.user}")
 
 bot = Bot()
 bot.run(os.getenv("DISCORD_TOKEN"))
