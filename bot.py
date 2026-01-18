@@ -70,8 +70,7 @@ FACTION_CHANNELS = {
 class RoleView(discord.ui.View):
     def __init__(self, role_type:str):
         super().__init__()
-        await ensure_roles_exist(guild)
-        await ensure_faction_channels_exist(guild)
+        
         self.role_map = {
             key: discord.utils.get(guild.roles, name=name)
             for key, name in ROLE_NAMES.items()
@@ -197,6 +196,8 @@ class Bot(discord.Client):
         await self.tree.sync()
 
     async def on_ready(self):
+        await ensure_roles_exist(guild)
+        await ensure_faction_channels_exist(guild)
         self.add_view(RoleView())
         print(f"Bot online: {self.user}")
 
