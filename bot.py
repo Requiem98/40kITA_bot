@@ -148,40 +148,34 @@ class RoleView(discord.ui.View):
         self.selections.update(interaction.data["values"])
         await interaction.response.defer(ephemeral=True)
 
-        """
-        selected = {self.role_map[v] for v in interaction.data["values"] if self.role_map[v]}
-        managed = set(self.role_map.values())
-        
-        for role in managed:
-            if role and role in member.roles and role not in selected:
-                await member.remove_roles(role)
-
-        for role in selected:
-            if role not in member.roles:
-                await member.add_roles(role)
-
-        await interaction.response.send_message(
-            "Roles updated.",
-            ephemeral=True
-        )
-        """
 
     @discord.ui.button(label="Apply roles", style=discord.ButtonStyle.success, custom_id="apply_roles")
-    async def submit(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def submit_roles(self, interaction: discord.Interaction, button: discord.ui.Button):
         member = interaction.user
     
         selected = [
             discord.utils.get(self.guild.roles, name=ROLE_NAMES[k])
             for k in self.selections
         ]
-
-        managed = set(self.role_map.values())
-        
-        for role in managed:
-            if role and role in member.roles and role not in selected:
-                await member.remove_roles(role)
     
         await member.add_roles(*selected)
+    
+        await interaction.response.send_message(
+            "Roles updated successfully.",
+            ephemeral=True
+        )
+        self.selections = set()
+
+    @discord.ui.button(label="Remove roles", style=discord.ButtonStyle.destructive, custom_id="remove_roles")
+    async def submit_remove_roles(self, interaction: discord.Interaction, button: discord.ui.Button):
+        member = interaction.user
+    
+        selected = [
+            discord.utils.get(self.guild.roles, name=ROLE_NAMES[k])
+            for k in self.selections
+        ]
+        
+        await member.remove_roles(*selected))
     
         await interaction.response.send_message(
             "Roles updated successfully.",
