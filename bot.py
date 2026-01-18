@@ -139,16 +139,7 @@ class RoleView(discord.ui.View):
                     options=options,
                     custom_id=f"faction_{group_name.lower()}"
                 )
-                """    
-                options = [discord.SelectOption(label=name, value=key) for key, name in ROLE_NAMES.items() if key not in ["LFG", "LFG Beginner"]]
-                select = discord.ui.Select(
-                            placeholder="Seleziona le fazioni che preferisci giocare",
-                            min_values=0,
-                            max_values=27,
-                            options=options,
-                            custom_id="faction_select"
-                        )
-                """
+                
                 select.callback = self.select_callback
                 self.add_item(select)
         
@@ -179,14 +170,18 @@ class RoleView(discord.ui.View):
     async def submit(self, interaction: discord.Interaction, button: discord.ui.Button):
         member = interaction.user
     
-        roles = [
+        selected = [
             discord.utils.get(self.guild.roles, name=ROLE_NAMES[k])
             for k in self.selections
         ]
+
+        managed = set(self.role_map.values())
+        
+        for role in managed:
+            if role and role in member.roles and role not in selected:
+                await member.remove_roles(role)
     
-        #roles = [r for r in roles if r]
-    
-        await member.add_roles(*roles)
+        await member.add_roles(*selected)
     
         await interaction.response.send_message(
             "Roles updated successfully.",
