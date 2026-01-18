@@ -69,7 +69,7 @@ FACTION_CHANNELS = {
 
 class RoleView(discord.ui.View):
     def __init__(self, guild: discord.Guild, role_type:str):
-        super().__init__()
+        super().__init__(timeout=None)
         
         self.role_map = {
             key: discord.utils.get(guild.roles, name=name)
@@ -200,8 +200,8 @@ class Bot(discord.Client):
         for guild in bot.guilds:
             await ensure_roles_exist(guild)
             await ensure_faction_channels_exist(guild)
-            self.add_view(RoleView(guild, "LFG match"), timeout=None)
-            self.add_view(RoleView(guild, "Faction"), timeout=None)
+            self.add_view(RoleView(guild, "LFG match"))
+            self.add_view(RoleView(guild, "Faction"))
         
     async def on_guild_join(self, guild: discord.Guild):
         print(f"Joined new guild: {guild.name} ({guild.id})")
