@@ -67,6 +67,41 @@ FACTION_CHANNELS = {
     "Nids": "tyranids",
 }
 
+FACTION_GROUPS = {
+    "Imperium": {
+        "SM": "Space Marines",
+        "BA": "Blood Angels",
+        "DA": "Dark Angels",
+        "SW": "Space Wolves",
+        "GK": "Grey Knights",
+        "AM": "Astra Militarum",
+        "AS": "Adepta Sororitas",
+        "AD": "Adeptus Custodes",
+        "AMe": "Adeptus Mechanicus",
+        "IK": "Imperial Knights",
+        "Agents": "Agents of the Imperium",
+    },
+    "Chaos": {
+        "CSM": "Chaos Space Marines",
+        "DG": "Death Guard",
+        "TS": "Thousand Sons",
+        "WE": "World Eaters",
+        "EC": "Emperor's Children",
+        "CK": "Chaos Knights",
+        "Daemons": "Chaos Daemons",
+    },
+    "Xenos": {
+        "Aeldari": "Aeldari",
+        "Drukhari": "Drukhari",
+        "Necrons": "Necrons",
+        "Orks": "Orks",
+        "Tau": "T'au Empire",
+        "Tyranids": "Tyranids",
+        "GSC": "Genestealer Cults",
+        "Votann": "Leagues of Votann",
+    }
+}
+
 class RoleView(discord.ui.View):
     def __init__(self, guild: discord.Guild, role_type:str):
         super().__init__(timeout=None)
@@ -88,6 +123,18 @@ class RoleView(discord.ui.View):
                         custom_id="role_select")
             
         elif(role_type == "Faction"):
+            
+            for group_name, factions in FACTION_GROUPS.items():
+                options = [discord.SelectOption(label=name, value=key) for key, name in factions.items()]
+                
+                select = discord.ui.Select(
+                    placeholder=f"Seleziona fazioni {group_name}",
+                    min_values=0,
+                    max_values=len(options),
+                    options=options,
+                    custom_id=f"faction_{group_name.lower()}"
+                )
+            """    
             options = [discord.SelectOption(label=name, value=key) for key, name in ROLE_NAMES.items() if key not in ["LFG", "LFG Beginner"]]
             select = discord.ui.Select(
                         placeholder="Seleziona le fazioni che preferisci giocare",
@@ -96,6 +143,7 @@ class RoleView(discord.ui.View):
                         options=options,
                         custom_id="faction_select"
                     )
+            """
         select.callback = self.select_callback
         self.add_item(select)
         
