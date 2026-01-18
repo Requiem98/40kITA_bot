@@ -172,7 +172,7 @@ class BotCommands(app_commands.Group):
     async def roles(self, interaction: discord.Interaction):
         embed = discord.Embed(
             title="Role Selection",
-            description="Choose your roles below."
+            description="Seleziona a quali richieste di partite vuoi ricevere notifiche."
         )
         await interaction.response.send_message(embed=embed, view=RoleView(interaction.guild, "LFG match"))
         
@@ -180,7 +180,7 @@ class BotCommands(app_commands.Group):
     async def factions(self, interaction: discord.Interaction):
         embed = discord.Embed(
             title="Faction Selection",
-            description="Choose your factions below."
+            description="Seleziona quali fazioni preferisci giocare."
         )
         await interaction.response.send_message(embed=embed, view=RoleView(interaction.guild, "Faction"))
 
