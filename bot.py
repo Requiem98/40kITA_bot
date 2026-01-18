@@ -37,10 +37,41 @@ ROLE_NAMES = {
     "Nids": "Tyranids",
 }
 
+FACTION_CHANNELS = {
+    "SM": "adeptus-astartes",
+    "BA": "blood-angels",
+    "DA": "dark-angels",
+    "SW": "space-wolves",
+    "BT": "black-templars",
+    "DW": "deathwatch",
+    "AC": "adeptus-custodes",
+    "AS": "adepta-sororitas",
+    "GK": "grey-knights",
+    "IK": "imperial-knights",
+    "adMech": "adeptus-mechanicus",
+    "AM": "astra-militarum",
+    "CSM": "chaos-marines",
+    "DG": "death-guard",
+    "TS": "thousand-sons",
+    "WE": "world-eaters",
+    "EC": "emperors-children",
+    "CD": "chaos-daemons",
+    "CK": "chaos-knights",
+    "CW": "aeldari",
+    "Drukh": "drukhari",
+    "GSC": "genestealer-cults",
+    "LoV": "leagues-of-votann",
+    "Necr": "necrons",
+    "Orks": "orks",
+    "TAU": "tau-empire",
+    "Nids": "tyranids",
+}
+
 class RoleView(discord.ui.View):
     def __init__(self, role_type:str):
         super().__init__()
         await ensure_roles_exist(guild)
+        await ensure_faction_channels_exist(guild)
         self.role_map = {
             key: discord.utils.get(guild.roles, name=name)
             for key, name in ROLE_NAMES.items()
@@ -48,7 +79,7 @@ class RoleView(discord.ui.View):
 
         if(role_type == "LFG match"):
             @discord.ui.select(
-                placeholder="Select your roles",
+                placeholder="Seleziona a quali partite vuoi ricevere notifiche.",
                 min_values=0,
                 max_values=2,
                 options=[
@@ -60,7 +91,7 @@ class RoleView(discord.ui.View):
         elif(role_type == "Faction"):
             options = [discord.SelectOption(label=name, value=key) for key, name in self.role_map.items() if key not in ["LFG", "LFG Beginner"]]
             @discord.ui.select(
-                placeholder="Select your factions",
+                placeholder="Seleziona le fazioni che preferisci giocare",
                 min_values=0,
                 max_values=27,
                 options=options,
@@ -91,15 +122,66 @@ async def ensure_roles_exist(guild: discord.Guild):
         if discord.utils.get(guild.roles, name=role_name) is None:
             await guild.create_role(name=role_name, reason="Auto-created by role selection bot")
 
+async def ensure_factions_category(guild: discord.Guild) -> discord.CategoryChannel:
+    category = discord.utils.get(guild.categories, name="Factions")
+    if category:
+        return category
+
+    return await guild.create_category(
+        name="Factions",
+        reason="Auto-created faction category"
+    )
+
+async def ensure_faction_channels_exist(guild: discord.Guild):
+    everyone = guild.default_role
+    category = await ensure_factions_category(guild)
+
+    for key, channel_name in FACTION_CHANNELS.items():
+        role = discord.utils.get(guild.roles, name=ROLE_NAMES[key])
+        if role is None:
+            continue
+
+        channel = discord.utils.get(
+            guild.text_channels,
+            name=channel_name
+        )
+        if channel:
+            continue
+
+        overwrites = {
+            everyone: discord.PermissionOverwrite(view_channel=False),
+            role: discord.PermissionOverwrite(
+                view_channel=True,
+                send_messages=True,
+                read_message_history=True,
+            ),
+        }
+
+        await guild.create_text_channel(
+            name=channel_name,
+            category=category,
+            overwrites=overwrites,
+            reason="Auto-created faction channel"
+        )
+
 @discord.app_commands.default_permissions(administrator=True)
-class RoleCommands(app_commands.Group):
+class BotCommands(app_commands.Group):
     @app_commands.command(name="roles", description="Send the role selection menu")
     async def roles(self, interaction: discord.Interaction):
         embed = discord.Embed(
             title="Role Selection",
             description="Choose your roles below."
         )
-        await interaction.response.send_message(embed=embed, view=RoleView())
+        await interaction.response.send_message(embed=embed, view=RoleView("LFG match"))
+        
+    @app_commands.command(name="roles", description="Send the factions selection menu")
+    async def factions(self, interaction: discord.Interaction):
+        embed = discord.Embed(
+            title="Faction Selection",
+            description="Choose your factions below."
+        )
+        await interaction.response.send_message(embed=embed, view=RoleView("Faction"))
+
 
 class Bot(discord.Client):
     def __init__(self):
