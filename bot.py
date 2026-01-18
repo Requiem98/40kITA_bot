@@ -106,7 +106,9 @@ FACTION_GROUPS = {
 class RoleView(discord.ui.View):
     def __init__(self, guild: discord.Guild, role_type:str):
         super().__init__(timeout=None)
-        
+        self.selections: set[] = set()
+        self.guild = guild
+
         self.role_map = {
             key: discord.utils.get(guild.roles, name=name)
             for key, name in ROLE_NAMES.items()
@@ -151,12 +153,14 @@ class RoleView(discord.ui.View):
                 self.add_item(select)
         
     async def select_callback(self, interaction: discord.Interaction):
-        guild = interaction.guild
-        member = interaction.user
 
+        self.selections.update(interaction.data["values"])
+        await interaction.response.defer(ephemeral=True)
+
+        """
         selected = {self.role_map[v] for v in interaction.data["values"] if self.role_map[v]}
         managed = set(self.role_map.values())
-
+        
         for role in managed:
             if role and role in member.roles and role not in selected:
                 await member.remove_roles(role)
@@ -167,6 +171,25 @@ class RoleView(discord.ui.View):
 
         await interaction.response.send_message(
             "Roles updated.",
+            ephemeral=True
+        )
+        """
+
+    @discord.ui.button(label="Apply roles", style=discord.ButtonStyle.success, custom_id="apply_roles")
+    async def submit(self, interaction: discord.Interaction, button: discord.ui.Button):
+        member = interaction.user
+    
+        roles = [
+            discord.utils.get(self.guild.roles, name=ROLE_NAMES[k])
+            for k in self.selections
+        ]
+    
+        #roles = [r for r in roles if r]
+    
+        await member.add_roles(*roles)
+    
+        await interaction.response.send_message(
+            "Roles updated successfully.",
             ephemeral=True
         )
 
