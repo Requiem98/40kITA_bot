@@ -137,16 +137,16 @@ class RoleView(discord.ui.View):
                     options=options,
                     custom_id=f"faction_{group_name.lower()}"
                 )
-            """    
-            options = [discord.SelectOption(label=name, value=key) for key, name in ROLE_NAMES.items() if key not in ["LFG", "LFG Beginner"]]
-            select = discord.ui.Select(
-                        placeholder="Seleziona le fazioni che preferisci giocare",
-                        min_values=0,
-                        max_values=27,
-                        options=options,
-                        custom_id="faction_select"
-                    )
-            """
+                """    
+                options = [discord.SelectOption(label=name, value=key) for key, name in ROLE_NAMES.items() if key not in ["LFG", "LFG Beginner"]]
+                select = discord.ui.Select(
+                            placeholder="Seleziona le fazioni che preferisci giocare",
+                            min_values=0,
+                            max_values=27,
+                            options=options,
+                            custom_id="faction_select"
+                        )
+                """
                 select.callback = self.select_callback
                 self.add_item(select)
         
