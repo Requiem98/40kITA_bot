@@ -99,11 +99,11 @@ class RoleView(discord.ui.View):
         select.callback = self.select_callback
         self.add_item(select)
         
-    async def select_callback(self, interaction: discord.Interaction, select: discord.ui.Select):
+    async def select_callback(self, interaction: discord.Interaction):
         guild = interaction.guild
         member = interaction.user
 
-        selected = {self.role_map[v] for v in select.values if self.role_map[v]}
+        selected = {self.role_map[v] for v in interaction.data["values"] if self.role_map[v]}
         managed = set(self.role_map.values())
 
         for role in managed:
