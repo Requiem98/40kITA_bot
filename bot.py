@@ -166,6 +166,31 @@ async def ensure_faction_channels_exist(guild: discord.Guild):
             reason="Auto-created faction channel"
         )
 
+async def ensure_bot_role(guild: discord.Guild, bot_user: discord.ClientUser):
+    role_name = "40kITA Bot"
+
+    role = discord.utils.get(guild.roles, name=role_name)
+
+    if role is None:
+        role = await guild.create_role(
+            name=role_name,
+            permissions=discord.Permissions(
+                manage_roles=True,
+                manage_channels=True,
+                view_channel=True,
+                send_messages=True,
+                read_message_history=True
+            ),
+            reason="Auto-created bot role"
+        )
+
+    # Assign role to bot if missing
+    bot_member = guild.get_member(bot_user.id)
+    if bot_member and role not in bot_member.roles:
+        await bot_member.add_roles(role)
+
+    return role
+
 @discord.app_commands.default_permissions(administrator=True)
 class BotCommands(app_commands.Group):
     @app_commands.command(name="roles", description="Send the role selection menu")
@@ -198,6 +223,7 @@ class Bot(discord.Client):
     async def on_ready(self):
         print(f"Bot online: {self.user}")
         for guild in bot.guilds:
+            await ensure_bot_role(guild, self.user)
             await ensure_roles_exist(guild)
             await ensure_faction_channels_exist(guild)
             self.add_view(RoleView(guild, "LFG match"))
@@ -205,6 +231,8 @@ class Bot(discord.Client):
         
     async def on_guild_join(self, guild: discord.Guild):
         print(f"Joined new guild: {guild.name} ({guild.id})")
+        print("creating bot role...")
+        await ensure_bot_role(guild, self.user)
         print("ensure roles exist...")
         await ensure_roles_exist(guild)
         print("ensure faction channels exist...")
