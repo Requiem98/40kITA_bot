@@ -77,7 +77,7 @@ class RoleView(discord.ui.View):
         }
 
         if(role_type == "LFG match"):
-            select = discord.ui.select(
+            select = discord.ui.Select(
                         placeholder="Seleziona a quali partite vuoi ricevere notifiche.",
                         min_values=0,
                         max_values=2,
@@ -89,7 +89,7 @@ class RoleView(discord.ui.View):
             
         elif(role_type == "Faction"):
             options = [discord.SelectOption(label=name, value=key) for key, name in self.role_map.items() if key not in ["LFG", "LFG Beginner"]]
-            select = discord.ui.select(
+            select = discord.ui.Select(
                         placeholder="Seleziona le fazioni che preferisci giocare",
                         min_values=0,
                         max_values=27,
