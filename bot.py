@@ -78,26 +78,28 @@ class RoleView(discord.ui.View):
         }
 
         if(role_type == "LFG match"):
-            @discord.ui.select(
-                placeholder="Seleziona a quali partite vuoi ricevere notifiche.",
-                min_values=0,
-                max_values=2,
-                options=[
-                    discord.SelectOption(label="@LFG", value="LFG"),
-                    discord.SelectOption(label="@LFG Beginner", value="LFG Beginner")
-                ],
-                custom_id="role_select")
+            select = discord.ui.select(
+                        placeholder="Seleziona a quali partite vuoi ricevere notifiche.",
+                        min_values=0,
+                        max_values=2,
+                        options=[
+                            discord.SelectOption(label="@LFG", value="LFG"),
+                            discord.SelectOption(label="@LFG Beginner", value="LFG Beginner")
+                        ],
+                        custom_id="role_select")
             
         elif(role_type == "Faction"):
             options = [discord.SelectOption(label=name, value=key) for key, name in self.role_map.items() if key not in ["LFG", "LFG Beginner"]]
-            @discord.ui.select(
-                placeholder="Seleziona le fazioni che preferisci giocare",
-                min_values=0,
-                max_values=27,
-                options=options,
-                custom_id="faction_select"
-            )
-    
+            select = discord.ui.select(
+                        placeholder="Seleziona le fazioni che preferisci giocare",
+                        min_values=0,
+                        max_values=27,
+                        options=options,
+                        custom_id="faction_select"
+                    )
+        select.callback = self.select_callback
+        self.add_item(select)
+        
     async def select_callback(self, interaction: discord.Interaction, select: discord.ui.Select):
         guild = interaction.guild
         member = interaction.user
