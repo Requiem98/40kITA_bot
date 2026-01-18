@@ -88,7 +88,7 @@ class RoleView(discord.ui.View):
                         custom_id="role_select")
             
         elif(role_type == "Faction"):
-            options = [discord.SelectOption(label=name, value=key) for key, name in self.role_map.items() if key not in ["LFG", "LFG Beginner"]]
+            options = [discord.SelectOption(label=name, value=key) for key, name in ROLE_NAMES.items() if key not in ["LFG", "LFG Beginner"]]
             select = discord.ui.Select(
                         placeholder="Seleziona le fazioni che preferisci giocare",
                         min_values=0,
