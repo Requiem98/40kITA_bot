@@ -175,7 +175,7 @@ class RoleView(discord.ui.View):
             for k in self.selections
         ]
         
-        await member.remove_roles(*selected))
+        await member.remove_roles(*selected)
     
         await interaction.response.send_message(
             "Roles updated successfully.",
