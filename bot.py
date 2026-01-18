@@ -106,7 +106,7 @@ FACTION_GROUPS = {
 class RoleView(discord.ui.View):
     def __init__(self, guild: discord.Guild, role_type:str):
         super().__init__(timeout=None)
-        self.selections: set[] = set()
+        self.selections = set()
         self.guild = guild
 
         self.role_map = {
