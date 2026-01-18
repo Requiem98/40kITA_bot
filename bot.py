@@ -187,6 +187,7 @@ class RoleView(discord.ui.View):
             "Roles updated successfully.",
             ephemeral=True
         )
+        self.selections = set()
 
 async def ensure_roles_exist(guild: discord.Guild):
     for role_name in ROLE_NAMES.values():
