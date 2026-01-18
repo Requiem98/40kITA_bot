@@ -122,6 +122,8 @@ class RoleView(discord.ui.View):
                             discord.SelectOption(label="@LFG Beginner", value="LFG Beginner")
                         ],
                         custom_id="role_select")
+            select.callback = self.select_callback
+            self.add_item(select)
             
         elif(role_type == "Faction"):
             
@@ -145,8 +147,8 @@ class RoleView(discord.ui.View):
                         custom_id="faction_select"
                     )
             """
-        select.callback = self.select_callback
-        self.add_item(select)
+                select.callback = self.select_callback
+                self.add_item(select)
         
     async def select_callback(self, interaction: discord.Interaction):
         guild = interaction.guild
