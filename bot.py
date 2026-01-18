@@ -192,7 +192,7 @@ class Bot(discord.Client):
         self.tree = app_commands.CommandTree(self)
 
     async def setup_hook(self):
-        self.tree.add_command(RoleCommands())
+        self.tree.add_command(BotCommands())
         await self.tree.sync()
 
     async def on_ready(self):
