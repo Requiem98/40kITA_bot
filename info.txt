@@ -3,3 +3,4 @@ lancia il bot nella sessione tmux: source venv/bin/activate
                                    python bot.py
 entrare in una sessione esistente: tmux attach -t discordbot
 uscire da una sessione: CTRL+B poi D
+eliminare sessione (da dentro la sessione stessa): exit
